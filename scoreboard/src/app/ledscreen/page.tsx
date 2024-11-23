@@ -4,7 +4,7 @@ interface LedscreenProps {
     component: ReactNode;
 }
 
-// @ts-ignore
+// @ts-expect-error: Shows the passed components from its parent
 export default function Ledscreen( { component } : LedscreenProps) {
     return (
         <>{component}</>
