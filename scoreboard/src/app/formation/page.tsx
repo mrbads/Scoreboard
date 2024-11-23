@@ -1,6 +1,7 @@
 'use client'
 
 import { Select, SelectItem } from "@nextui-org/react";
+import React from "react";
 import { useEffect, useMemo, useState } from "react";
 
 interface FormationProps {
@@ -30,22 +31,4 @@ export default function Formation() {
             {currentPlayer}
         </div>
     );
-}
-
-export function SetFormation({players} : FormationProps) {
-    const playerItems = players.map((player) => ({label: player, value: player}));
-    const [value, setValue] = useState(new Set([]));
-    return (
-        <>
-            <Select
-            items={playerItems}
-            selectionMode="multiple"
-            selectedKeys={value}
-            onSelectionChange={setValue}
-            >
-                {(player) => <SelectItem key={player.value}>{player.label}</SelectItem>}
-            </Select>
-            <p>{value}</p>
-        </>
-    )
 }

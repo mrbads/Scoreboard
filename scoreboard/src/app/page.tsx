@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Ledscreen from "./ledscreen/page";
 import ScoreBoard from "./components/ScoreBoard";
-import Formation, { SetFormation } from "./formation/page";
-import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import Formation from "./formation/page";
+import { Button, Card, CardBody, CardHeader, Input, Select, SelectItem } from "@nextui-org/react";
 import TeamScore from "./components/TeamScore";
 
 export default function Home() {
@@ -67,5 +67,23 @@ export default function Home() {
       </div>
       {SetFormation({players})}
     </div>
+  )
+}
+
+function SetFormation({players} : {players : string[]}) {
+  const playerItems = players.map((player) => ({label: player, value: player}));
+  const [value, setValue] = useState(new Set([]));
+  return (
+      <>
+          <Select
+          items={playerItems}
+          selectionMode="multiple"
+          selectedKeys={value}
+          onSelectionChange={setValue}
+          >
+              {(player) => <SelectItem key={player.value}>{player.label}</SelectItem>}
+          </Select>
+          <p>{value}</p>
+      </>
   )
 }
