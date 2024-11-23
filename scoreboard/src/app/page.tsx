@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from "react";
-import Ledscreen from "./ledscreen/page";
-import ScoreBoard from "./components/ScoreBoard";
-import Formation from "./formation/page";
 import { Button, Card, CardBody, CardHeader, Input, Select, SelectItem } from "@nextui-org/react";
+import { useState } from "react";
+import ScoreBoard from "./components/ScoreBoard";
 import TeamScore from "./components/TeamScore";
+import Formation from "./formation/page";
+import Ledscreen from "./ledscreen/page";
 
 export default function Home() {
   const [score1, setScore1] = useState(0);

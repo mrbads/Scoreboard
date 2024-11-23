@@ -1,7 +1,5 @@
 'use client'
 
-import { Select, SelectItem } from "@nextui-org/react";
-import React from "react";
 import { useEffect, useMemo, useState } from "react";
 
 interface FormationProps {
