@@ -24,6 +24,7 @@ export default function Timer( { halfLength, startingMinutes, isRunning, setIsRu
                     setIsRunning(false);
                 }
             }, 1000);
+            return () => clearInterval(interval);
         }
     }, [isRunning, startingMinutes]);
 
