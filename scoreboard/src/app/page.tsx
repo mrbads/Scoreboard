@@ -2,7 +2,6 @@
 
 import { Button, Card, CardBody, CardHeader, Input, Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
-import Ledscreen from "./components/Ledscreen";
 import ScoreBoard from "./components/ScoreBoard";
 import TeamScore from "./components/TeamScore";
 import Formation from "./formation/page";
@@ -39,12 +38,12 @@ export default function Home() {
 
   return (
     <div className="container mx-auto">
-      <Ledscreen children={
+      {
         showScoreBoard ?
           <ScoreBoard score1={score1} score2={score2} halfLength={halfLength} startingMinutes={startingMinutes} isRunning={isRunning} setIsRunning={setIsRunning} goalScored={goalScored} timerReset={resetTimer} setTimerReset={setResetTimer} />
           :
           <Formation />
-      }/>
+      }
       <div className="pt-32">
         <p>Controls</p>
         <div className="grid grid-cols-3 gap-2">
