@@ -71,14 +71,14 @@ export default function Home() {
 
 function SetFormation({players} : {players : string[]}) {
   const playerItems = players.map((player) => ({label: player, value: player}));
-  const [value, setValue] = useState(new Set([]));
+  const [value, setValue] = useState<Set<string>>(new Set([]));
   return (
       <>
           <Select
           items={playerItems}
           selectionMode="multiple"
           selectedKeys={value}
-          onSelectionChange={setValue}
+          onSelectionChange={(keys) => setValue(new Set(keys as Set<string>))}
           >
               {(player) => <SelectItem key={player.value}>{player.label}</SelectItem>}
           </Select>
