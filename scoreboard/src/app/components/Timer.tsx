@@ -26,7 +26,7 @@ export default function Timer( { halfLength, startingMinutes, isRunning, setIsRu
             }, 1000);
             return () => clearInterval(interval);
         }
-    }, [isRunning, startingMinutes]);
+    }, [isRunning, startingMinutes, halfLength, setIsRunning]);
 
     useEffect(() => {
         if (reset) {
