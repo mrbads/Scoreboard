@@ -15,11 +15,11 @@ wss.on('connection', (ws) => {
                 }
             });
         } else if (type === 'timerControl') {
-            const { action } = data;
+            const { action, startMinute, endMinute } = data;
 
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ type: 'timerControl', data: { action } }))
+                    client.send(JSON.stringify({ type: 'timerControl', data: { action, startMinute, endMinute } }))
                 }
             });
         } else if (type === 'wedstrijdcode') {
