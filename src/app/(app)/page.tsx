@@ -13,6 +13,8 @@ export default function Home() {
     const [teamBLogo, setTeamBLogo] = useState("/default-logo.svg");
     const [timer, setTimer] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
+    const [startMinute, setStartMinute] = useState(0);
+    const [endMinute, setEndMinute] = useState(45); // default end minute
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,9 +35,11 @@ export default function Home() {
                 setTeamBScore(data.teamBScore);
             } else if (type === 'timerControl') {
                 if (data.action === 'start') {
+                    console.log(data)
+                    setStartMinute(data.startMinute);
+                    setEndMinute(data.endMinute);
+                    setTimer(data.startMinute * 60);
                     setIsRunning(true);
-                } else if (data.action === 'pause') {
-                    setIsRunning(false);
                 } else if (data.action === 'stop') {
                     setIsRunning(false);
                     setTimer(0);
@@ -50,7 +54,7 @@ export default function Home() {
 
     useEffect(() => {
         const fetchSportlinkData = async () => {
-            const res = await fetch(`https://data.sportlink.com/wedstrijd-informatie?wedstrijdcode=${wedstrijdcode}&client_id=4h70DmVVZX`);
+            const res = await fetch(`/api/sportlink?wedstrijdcode=${wedstrijdcode}`);
             const data = await res.json();
             if (data) {
                 setTeamAName(data.thuisteam.naam);
@@ -68,12 +72,12 @@ export default function Home() {
     useEffect(() => {
         const interval = setInterval(() => {
             if (isRunning) {
-                setTimer((prevTimer) => (prevTimer < 2700 ? prevTimer + 1 : 2700));
+                setTimer((prevTimer) => (prevTimer < endMinute * 60 ? prevTimer + 1 : endMinute * 60));
             }
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [isRunning]);
+    }, [isRunning, endMinute, startMinute]);
 
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);

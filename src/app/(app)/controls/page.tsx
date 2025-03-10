@@ -1,16 +1,16 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardBody, Button } from '@heroui/react';
+import {Card, CardHeader, CardBody, Button, ButtonGroup, Input} from '@heroui/react';
 
 export default function Controls() {
     const [teamA, setTeamA] = useState('Team A');
     const [teamAScore, setTeamAScore] = useState(0);
     const [teamB, setTeamB] = useState('Team B');
     const [teamBScore, setTeamBScore] = useState(0);
-    const [timer, setTimer] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
     const [programma, setProgramma] = useState(null);
+    const [startMinute, setStartMinute] = useState(0);
+    const [endMinute, setEndMinute] = useState(45); // default end minute
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,7 +36,7 @@ export default function Controls() {
 
     useEffect(() => {
         const fetchProgramma = async () => {
-            const prog = await fetch("https://data.sportlink.com/programma?gebruiklokaleteamgegevens=NEE&eigenwedstrijden=JA&thuis=JA&uit=NEE&aantaldagen=6&client_id=4h70DmVVZX");
+            const prog = await fetch("/api/sportlink?programma=true");
             const data = await prog.json();
             setProgramma(data);
         };
@@ -57,10 +57,11 @@ export default function Controls() {
         });
     };
 
-    const sendTimerControl = (action: 'start' | 'pause' | 'stop') => {
+    const sendTimerControl = (action: 'start' | 'stop', startMinute: number, endMinute: number) => {
         const ws = new WebSocket('ws://localhost:8080');
         ws.onopen = () => {
-            ws.send(JSON.stringify({ type: 'timerControl', data: { action } }));
+            const data = { action, startMinute, endMinute };
+            ws.send(JSON.stringify({ type: 'timerControl', data }));
             ws.close();
         }
     };
@@ -120,17 +121,17 @@ export default function Controls() {
     }
 
     return (
-        <div className="flex flex-col items-center gap-4 p-4">
+        <div className="grid grid-cols-2 gap-4 p-4">
             <Card>
                 <CardHeader>
                     <h2>{teamA}</h2>
                 </CardHeader>
                 <CardBody>
-                    <div className="flex gap-2">
-                        <Button onPress={() => increaseScore('A')}>+</Button>
-                        <p>{teamAScore}</p>
+                    <ButtonGroup fullWidth={true}>
                         <Button onPress={() => decreaseScore('A')}>-</Button>
-                    </div>
+                        <Button>{teamAScore}</Button>
+                        <Button onPress={() => increaseScore('A')}>+</Button>
+                    </ButtonGroup>
                 </CardBody>
             </Card>
             <Card>
@@ -138,33 +139,51 @@ export default function Controls() {
                     <p className="h2">{teamB}</p>
                 </CardHeader>
                 <CardBody>
-                    <div className="flex gap-2">
-                        <Button onPress={() => increaseScore('B')}>+</Button>
-                        <p>{teamBScore}</p>
+                    <ButtonGroup fullWidth={true}>
                         <Button onPress={() => decreaseScore('B')}>-</Button>
+                        <Button>{teamBScore}</Button>
+                        <Button onPress={() => increaseScore('B')}>+</Button>
+                    </ButtonGroup>
+                </CardBody>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <p className="h2">Klok</p>
+                </CardHeader>
+                <CardBody className={"gap-2"}>
+                    <Button onPress={() => {sendTimerControl('start', 0, 45); setStartMinute(0); setEndMinute(45);}}>Start 0-45</Button>
+                    <Button onPress={() => {sendTimerControl('start', 45, 90); setStartMinute(45); setEndMinute(90);}}>Start 45-90</Button>
+                    <Button onPress={() => sendTimerControl('start', startMinute, endMinute)}>Start</Button>
+                    <Button onPress={() => sendTimerControl('stop', startMinute, endMinute)}>Stop</Button>
+                    <div className={"flex gap-2"}>
+                        <Input
+                            type="number"
+                            value={startMinute.toString()}
+                            onChange={(e) => setStartMinute(Number(e.target.value))}
+                            label="Start Minute"
+                            labelPlacement={"outside"}
+                        />
+                        <Input
+                            type="number"
+                            value={endMinute.toString()}
+                            onChange={(e) => setEndMinute(Number(e.target.value))}
+                            label="End Minute"
+                            labelPlacement={"outside"}
+                            validate={(value) => Number(value) > startMinute ? true : null}
+                            isInvalid={endMinute <= startMinute}
+                        />
                     </div>
                 </CardBody>
             </Card>
             <Card>
                 <CardHeader>
-                    <h2>General</h2>
+                    <h2>Algemeen</h2>
                 </CardHeader>
                 <CardBody>
                     <Button onPress={resetScore}>Reset scores</Button>
                 </CardBody>
             </Card>
-            <Card>
-                <CardHeader>
-                    <p className="h2">Timer</p>
-                </CardHeader>
-                <CardBody>
-                    <p>{timer}s</p>
-                    <Button onPress={() => sendTimerControl('start')}>Start</Button>
-                    <Button onPress={() => sendTimerControl('pause')}>Pause</Button>
-                    <Button onPress={() => sendTimerControl('stop')}>Stop</Button>
-                </CardBody>
-            </Card>
-            <Card>
+            <Card className={"col-span-2"}>
                 <CardHeader>
                     <h2>Programma</h2>
                 </CardHeader>
@@ -185,7 +204,7 @@ export default function Controls() {
                             {programma.map((wedstrijd) => (
                                 <tr key={wedstrijd.wedstrijdcode}>
                                     <td>{wedstrijd.datum}</td>
-                                    <td>{wedstrijd.tijd}</td>
+                                    <td>{wedstrijd.aanvangstijd}</td>
                                     <td>{wedstrijd.thuisteam}</td>
                                     <td>{wedstrijd.uitteam}</td>
                                     <td>{wedstrijd.wedstrijdcode}</td>
