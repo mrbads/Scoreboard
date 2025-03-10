@@ -183,7 +183,7 @@ export default function Controls() {
                             </thead>
                             <tbody>
                             {programma.map((wedstrijd) => (
-                                <tr key={wedstrijd.id}>
+                                <tr key={wedstrijd.wedstrijdcode}>
                                     <td>{wedstrijd.datum}</td>
                                     <td>{wedstrijd.tijd}</td>
                                     <td>{wedstrijd.thuisteam}</td>
