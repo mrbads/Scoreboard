@@ -35,7 +35,6 @@ export default function Home() {
                 setTeamBScore(data.teamBScore);
             } else if (type === 'timerControl') {
                 if (data.action === 'start') {
-                    console.log(data)
                     setStartMinute(data.startMinute);
                     setEndMinute(data.endMinute);
                     setTimer(data.startMinute * 60);
