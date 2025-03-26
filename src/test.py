@@ -28,3 +28,19 @@ def fetch_programma(client_id):
 client_id = 'your_client_id'  # Replace with actual client ID
 data = fetch_programma(client_id)
 print(data)
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route('/api/programma', methods=['GET'])
+def get_programma():
+    client_id = request.args.get('client_id')
+    if not client_id:
+        return jsonify({'error': 'client_id is required'}), 400
+
+    data = fetch_programma(client_id)
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(debug=True)
