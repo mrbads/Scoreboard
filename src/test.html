@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Programma</title>
+</head>
+<body>
+    <h1>Fetch Programma Data</h1>
+    <button id="fetchButton">Fetch Data</button>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', async () => {
+            const clientId = 'your_client_id';  // Replace with actual client ID
+            const response = await fetch(`/api/programma?client_id=true}`);
+            const data = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>
